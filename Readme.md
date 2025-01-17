@@ -32,7 +32,7 @@ assnet::nettask connection(assnet::stream& stream) {
 ```
 
 Operator `co_await` checks if there is any data that can be read, if enough data is present, it will not suspend.
-If it does suspend, you will have to resume this manually. You can either have a vector of connections that you will resume one after the other, or you can have a dedicated thread for each connection or a mix of the two.
+If it does suspend, you will have to resume the `nettask` manually (by using `assnet::nettask::make_progress()`). You can either have a vector of connections that you will resume one after the other, or you can have a dedicated thread for each connection or a mix of the two.
 
 ```c++
 

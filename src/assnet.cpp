@@ -72,6 +72,10 @@ bool assnet::stream::read_op::await_suspend(std::coroutine_handle<nettask::promi
 bool assnet::nettask::try_progress() {
     if (handle.promise().ro) {
         if (handle.promise().ro->make_progress()) handle.resume();
+        /* else if (!handle.promise().ro->str->is_open()) {
+            handle.resume(); // one last time incase 
+            return false;
+        } */
 
         return true;
     }

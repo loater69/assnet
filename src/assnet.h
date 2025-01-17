@@ -30,6 +30,8 @@ namespace assnet {
         void put_n(char* p, size_t n);
         void put(char c);
 
+        inline bool is_open() { return sock != INVALID_SOCKET; }
+
         stream& operator << (std::integral auto v) {
             put_n((char*)&v, sizeof(v));
 
@@ -39,6 +41,13 @@ namespace assnet {
         struct read_op;
 
         read_op operator >> (std::integral auto& v);
+
+        read_op read(char* p, size_t n);
+
+        inline void close() {
+            closesocket(sock);
+            sock = INVALID_SOCKET;
+        }
 
         inline ~stream() {
             closesocket(sock);
@@ -105,6 +114,9 @@ namespace assnet {
                 std::cout << "fuck\n";
                 closesocket(str->sock);
                 return false;
+            } else if (iResult == 0) {
+                closesocket(str->sock);
+                return false;
             }
 
             size_t j;
@@ -143,6 +155,15 @@ namespace assnet {
         op.str = this;
 
         op.instr.push_back(read_op::read_instr{ .p = (char*)&v, .n = sizeof(v) });
+
+        return op;
+    }
+
+    inline stream::read_op assnet::stream::read(char* p, size_t n) {
+        read_op op;
+        op.str = this;
+
+        op.instr.push_back(read_op::read_instr{ .p = p, .n = n });
 
         return op;
     }

@@ -2,3 +2,5 @@
 !src/
 !src/*
 !.gitignore
+!License.md
+!Readme.md
